@@ -1,4 +1,4 @@
-name: Preserve Release Branch
+name: No-AutoDelete Release
 on:
   pull_request:
     types: [closed]
