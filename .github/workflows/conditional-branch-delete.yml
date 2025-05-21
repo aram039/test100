@@ -7,6 +7,8 @@ jobs:
   preserve-release-branches:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to modify branch protection rules
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,40 +35,79 @@ jobs:
         if: steps.check-pattern.outputs.match == 'true'
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GH_PAT }}
           script: |
-            try {
-              const branchName = "${{ steps.branch-name.outputs.branch_name }}";
-              const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+            // Rest of the script remains the same
+
+# name: Preserve Release Branches
+# on:
+#   pull_request:
+#     types: [closed]
+
+# jobs:
+#   preserve-release-branches:
+#     if: github.event.pull_request.merged == true
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+        
+#       - name: Get branch name
+#         id: branch-name
+#         run: |
+#           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+#           echo "Branch name: $BRANCH_NAME"
+#           echo "name=branch_name::$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+#       - name: Check if branch matches release pattern
+#         id: check-pattern
+#         run: |
+#           if [[ "${{ steps.branch-name.outputs.branch_name }}" =~ ^TD[0-9]+-[0-9]+R[0-9]+ ]]; then
+#             echo "Branch matches release pattern - preserving"
+#             echo "match=true" >> $GITHUB_OUTPUT
+#           else
+#             echo "Branch does not match release pattern"
+#             echo "match=false" >> $GITHUB_OUTPUT
+#           fi
+          
+#       - name: Protect branch from deletion
+#         if: steps.check-pattern.outputs.match == 'true'
+#         uses: actions/github-script@v6
+#         with:
+#           script: |
+#             try {
+#               const branchName = "${{ steps.branch-name.outputs.branch_name }}";
+#               const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
               
-              // Get branch protection rules to check if it's already protected
-              const protection = await github.rest.repos.getBranchProtection({
-                owner: owner,
-                repo: repo,
-                branch: branchName
-              }).catch(() => null);
+#               // Get branch protection rules to check if it's already protected
+#               const protection = await github.rest.repos.getBranchProtection({
+#                 owner: owner,
+#                 repo: repo,
+#                 branch: branchName
+#               }).catch(() => null);
               
-              if (!protection) {
-                // Apply branch protection to prevent deletion
-                await github.rest.repos.updateBranchProtection({
-                  owner: owner,
-                  repo: repo,
-                  branch: branchName,
-                  required_status_checks: null,
-                  enforce_admins: false,
-                  required_pull_request_reviews: null,
-                  restrictions: null,
-                  required_linear_history: false,
-                  allow_force_pushes: true,
-                  allow_deletions: false,  # This is the key setting
-                  required_conversation_resolution: false
-                });
-                console.log(`Branch ${branchName} is now protected from deletion`);
-              } else {
-                console.log(`Branch ${branchName} is already protected`);
-              }
-            } catch (error) {
-              console.error(`Error protecting branch: ${error.message}`);
-            }
+#               if (!protection) {
+#                 // Apply branch protection to prevent deletion
+#                 await github.rest.repos.updateBranchProtection({
+#                   owner: owner,
+#                   repo: repo,
+#                   branch: branchName,
+#                   required_status_checks: null,
+#                   enforce_admins: false,
+#                   required_pull_request_reviews: null,
+#                   restrictions: null,
+#                   required_linear_history: false,
+#                   allow_force_pushes: true,
+#                   allow_deletions: false,  # This is the key setting
+#                   required_conversation_resolution: false
+#                 });
+#                 console.log(`Branch ${branchName} is now protected from deletion`);
+#               } else {
+#                 console.log(`Branch ${branchName} is already protected`);
+#               }
+#             } catch (error) {
+#               console.error(`Error protecting branch: ${error.message}`);
+#             }
 # name: Conditionally Delete Merged Branches
 
 # on:
