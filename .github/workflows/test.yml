@@ -1,4 +1,4 @@
-name: Preserve Release Brancheeeee
+name: Preserve Release Branch
 on:
   pull_request:
     types: [closed]
