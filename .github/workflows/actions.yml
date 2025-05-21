@@ -26,7 +26,7 @@ jobs:
         id: check-pattern
         run: |
           echo "Checking if branch matches the release pattern..."
-          if [[ "${{ env.branch_name }}" =~ ^TD\d+-\d+R\d+ ]]; then
+          if [[ "${{ env.branch_name }}" =~ TD\d+-\d+R\d+ ]]; then
             echo "Branch matches release pattern - preserving."
             echo "match=true" >> $GITHUB_ENV
           else
