@@ -13,7 +13,7 @@ COPY . .
 
 ################ RUN echo "Hello World!"  ############################
 
-RUN python3 --version
+# RUN python3 --version
 
 EXPOSE 443
 
