@@ -11,6 +11,8 @@ COPY . /app
 
 ####checking the python3 version #####
 
+RUN echo "Hello World!"
+
 RUN python3 --version
 
 EXPOSE 443
