@@ -9,6 +9,8 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
+####checking the python3 version #####
+
 RUN python3 --version
 
 EXPOSE 443
