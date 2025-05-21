@@ -8,13 +8,22 @@ on:
 
 jobs:
   preserve-release-branch:
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') && github.event.pull_request.head.ref =~ /^release\/TD\d+-\d+R\d+$/
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate branch name
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          if [[ ! $BRANCH_NAME =~ ^release/TD[0-9]+-[0-9]+R[0-9]+$ ]]; then
+            echo "Error: Branch name $BRANCH_NAME does not match pattern release/TD<digits>-<digits>R<digits>"
+            exit 1
+          fi
+          echo "Branch name $BRANCH_NAME is valid."
 
       - name: Log merge and preservation
         run: |
@@ -31,3 +40,4 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: 'Release branch ${{ github.event.pull_request.head.ref }} (matching TD<digits>-<digits>R<digits>) was successfully merged into ${{ github.event.pull_request.base.ref }} and preserved.'
+            });
