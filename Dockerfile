@@ -9,6 +9,8 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
+########## Echo #######
+
 ####checking the python3 version #####
 
 ################ RUN echo "Hello World!"  ############################
