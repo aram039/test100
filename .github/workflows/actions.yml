@@ -12,9 +12,11 @@ jobs:
       contents: write  # To modify branch protection rules
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Get the branch name from the PR
       - name: Get the branch name
         id: branch-name
         run: |
@@ -22,18 +24,25 @@ jobs:
           echo "Branch name: $BRANCH_NAME"
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
 
+      # Step 3: Check if the branch matches the release pattern
       - name: Check if branch matches release pattern
         id: check-pattern
         run: |
           echo "Checking if branch matches the release pattern..."
-          if [[ "${{ env.branch_name }}" =~ TD\d+-\d+R\d+ ]]; then
+          
+          # Trim any leading or trailing spaces from the branch name
+          BRANCH_NAME="${{ env.branch_name }}"
+          BRANCH_NAME=$(echo "$BRANCH_NAME" | xargs)  # Trim whitespace
+
+          # Check if the branch name matches the pattern
+          if [[ "$BRANCH_NAME" =~ ^TD[0-9]+-[0-9]+R[0-9]+$ ]]; then
             echo "Branch matches release pattern - preserving."
             echo "match=true" >> $GITHUB_ENV
           else
             echo "Branch does not match release pattern."
             echo "match=false" >> $GITHUB_ENV
-          fi
 
+      # Step 4: Protect the branch from deletion if it matches the release pattern
       - name: Protect branch from deletion
         if: ${{ env.match == 'true' }}
         uses: actions/github-script@v6
