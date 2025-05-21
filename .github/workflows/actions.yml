@@ -41,6 +41,7 @@ jobs:
           else
             echo "Branch does not match release pattern."
             echo "match=false" >> $GITHUB_ENV
+          fi  # This 'fi' closes the if block
 
       # Step 4: Protect the branch from deletion if it matches the release pattern
       - name: Protect branch from deletion
