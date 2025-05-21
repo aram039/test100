@@ -9,6 +9,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN python --version
+
 EXPOSE 443
 
 CMD ["python", "app.py"]
