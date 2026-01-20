@@ -115,7 +115,10 @@ if (!CLUSTER_IDENTIFIER_VAR) {
 def CLUSTER_IDENTIFIER = CLUSTER_IDENTIFIER_VAR
 
 pipeline{
-    agent any
+        agent {
+        label 'build-agent'
+    }
+
     // agent{
     //     kubernetes {
     //         inheritFrom 'trustd-serverless'
