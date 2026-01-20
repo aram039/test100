@@ -112,7 +112,7 @@ if (!CLUSTER_IDENTIFIER_VAR) {
 }
 
 
-params.CLUSTER_IDENTIFIER = CLUSTER_IDENTIFIER_VAR
+//params.CLUSTER_IDENTIFIER = CLUSTER_IDENTIFIER_VAR
 
 pipeline{
     agent{
@@ -120,7 +120,7 @@ pipeline{
             inheritFrom 'trustd-serverless'
             yaml """
               spec:
-                serviceAccountName: ${"trustd-" + params.CLUSTER_IDENTIFIER}
+                serviceAccountName: ${"trustd-" + "${CLUSTER_IDENTIFIER_VAR}" }
             """
         }
     }
@@ -297,7 +297,7 @@ pipeline{
                     if ( ! params.SKIP_ACM ) {
                         build job: "trustd/acm_route53/create-ACM-and-route53", parameters: [
                             string(name: 'ENVIRONMENT', value: "${ENVIRONMENT_VAR}"),
-                            string(name: 'CLUSTER_IDENTIFIER', value: "${params.CLUSTER_IDENTIFIER}"),
+                            string(name: 'CLUSTER_IDENTIFIER', value: "${CLUSTER_IDENTIFIER_VAR}"),
                             string(name: 'REGION', value: region),
                         ]
                     } else {
