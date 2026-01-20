@@ -94,7 +94,8 @@ properties([
     ])
 ])
 
-def ENVIRONMENT_VAR = params.ENVIRONMENT
+def ENVIRONMENT_VAR = ''
+    
 
 def clusterMap = [
     pink : 'orange-aqua',
