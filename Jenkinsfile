@@ -115,15 +115,16 @@ if (!CLUSTER_IDENTIFIER_VAR) {
 def CLUSTER_IDENTIFIER = CLUSTER_IDENTIFIER_VAR
 
 pipeline{
-    agent{
-        kubernetes {
-            inheritFrom 'trustd-serverless'
-            yaml """
-              spec:
-                serviceAccountName: ${"trustd-" + "${CLUSTER_IDENTIFIER_VAR}" }
-            """
-        }
-    }
+    agent any
+    // agent{
+    //     kubernetes {
+    //         inheritFrom 'trustd-serverless'
+    //         yaml """
+    //           spec:
+    //             serviceAccountName: ${"trustd-" + "${CLUSTER_IDENTIFIER_VAR}" }
+    //         """
+    //     }
+    // }
     parameters{
         booleanParam(name: 'DELETE_IF_FAILED', defaultValue: true, description: 'DELETE sls stack in case FAILED')
         booleanParam(name: 'DELETE', defaultValue: false, description: 'Only DELETE checked service')
